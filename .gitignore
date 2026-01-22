@@ -1,0 +1,36 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+
+# ===== Environment =====
+.env
+.env.*
+*.key
+
+# ===== Jupyter =====
+.ipynb_checkpoints/
+
+# ===== LLM / AI =====
+vectorstore/
+chroma_db/
+*.bin
+*.pt
+*.safetensors
+
+# ===== Logs =====
+*.log
+logs/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== IDE =====
+.vscode/
+.idea/
