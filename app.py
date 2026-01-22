@@ -86,4 +86,22 @@ vector_store = Chroma(
 )
 
 vector_store.add_documents(total_docs)
-print("成功新增新資料至 Chroma。")
+# print("成功新增新資料至 Chroma。")
+
+# n:總共找多少相關文件
+# k:取出幾份文件
+def parent_document_retrieval(question, n=20, k=2):
+    docs = vector_store.similarity_search(question, k=n)
+    seen_ids = set()
+    documents = []
+    for doc in docs:
+        if doc.metadata["parent_id"] not in seen_ids:
+            seen_ids.add(doc.metadata["parent_id"])
+            parent_docs = vector_store.similarity_search(query="",k=1,filter={"id": doc.metadata["parent_id"]})
+            if len(parent_docs) > 0:
+                documents.append(parent_docs[0])
+
+    return documents[:k]
+
+docsresp=parent_document_retrieval("直立式洗衣機多久要洗一次？")
+print(docsresp)
