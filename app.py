@@ -1,19 +1,40 @@
 import gradio as gr
 
+from src.embeddings import get_embeddings
+from src.llm_client import get_llm
+from src.vector_db import get_vector_store
+from src.chains import build_rag_chain
+
+# 初始化
+def init_chains():
+    llm = get_llm()
+    embeddings = get_embeddings()
+
+    sop_vs = get_vector_store("cleaning_sop", embeddings)
+    air_vs = get_vector_store("air_purifier", embeddings)
+
+    sop_chain = build_rag_chain(llm, sop_vs, n=20, k=1)
+    air_chain = build_rag_chain(llm, air_vs, n=20, k=1)
+
+    return sop_chain, air_chain
+
+SOP_CHAIN, AIR_CHAIN = init_chains()
+
+# UI
 def fn_cleaning_sop(msg: str) -> str:
     msg = (msg or "").strip()
     if not msg:
         return "請輸入問題。"
-    return f"{msg}!"
+    return SOP_CHAIN.invoke({"question": msg})
 
 def fn_air_purifier(msg: str) -> str:
     msg = (msg or "").strip()
     if not msg:
         return "請輸入問題。"
-    return f"{msg}!"
+    return AIR_CHAIN.invoke({"question": msg})
 
 with gr.Blocks(title="LLM 應用") as demo:
-    gr.Markdown("## LLM 應用（Tabs 介面雛形）")
+    gr.Markdown("## LLM 應用（居家清潔）")
 
     with gr.Tabs():
         with gr.Tab("清潔SOP"):
