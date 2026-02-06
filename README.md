@@ -94,7 +94,7 @@ pip install -r requirements.txt
 ### 2️⃣ 建立向量資料庫
 
 ```bash
-python scripts/ingest.py
+python -m scripts.ingest
 ```
 
 ### 3️⃣ 啟動應用程式
